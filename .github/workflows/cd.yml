@@ -29,3 +29,6 @@ jobs:
 
       - name: Deploy to GCP
         run: gcloud builds submit --tag europe-north2-docker.pkg.dev/cool-snowfall-471510-a4/notely-ar-repo/my-app:latest .
+
+      - name: Deploy to Cloud Run
+        run: gcloud run deploy notely --image europe-north2-docker.pkg.dev/cool-snowfall-471510-a4/notely-ar-repo/IMAGE:TAG --region europe-west1 --allow-unauthenticated --project cool-snowfall-471510-a4 --max-instances=4
