@@ -7,6 +7,9 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -29,6 +32,12 @@ jobs:
 
       - name: Deploy to GCP
         run: gcloud builds submit --tag europe-north2-docker.pkg.dev/cool-snowfall-471510-a4/notely-ar-repo/my-app:latest .
+
+      - name: Install Goose
+        run: go install github.com/pressly/goose/v3/cmd/goose@latest
+
+      - name: Migrate DB
+        run: ./scripts/migrateup.sh
 
       - name: Deploy to Cloud Run
         run: gcloud run deploy notely --image europe-north2-docker.pkg.dev/cool-snowfall-471510-a4/notely-ar-repo/my-app:latest --region europe-west1 --allow-unauthenticated --project cool-snowfall-471510-a4 --max-instances=4
